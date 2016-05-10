@@ -10,13 +10,13 @@
         <script>
             window.addEventListener('load', function()
             {
-                var peer = new Peer('', {host: 'localhost', port: 80, path: '/peer'});                
+                var peer = new Peer('', {host: 'localhost', port: 9000, path: '/peer'});                
                 
                 peer.on('open', function() {
                     console.log("PeerJS connection success ID:", peer.id);
                 });
                 
-                var socket = io.connect('http://localhost/');
+                var socket = io.connect(window.location.protocol+"//"+window.location.hostname+":{{port}}/");
                 socket.on('connect', function(err){
                     console.log("socket.onconnect callback");
                     if (err) {

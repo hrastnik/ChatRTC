@@ -4,13 +4,19 @@ var server = require('http').createServer(app);
 var path = require('path');
 var PeerServer = require('peer').ExpressPeerServer;
 var io = require('socket.io')(server);
+var swig = require('swig');
 
-var PORT = process.env.PORT || 80; 
+var PORT = process.env.PORT || 9000; 
 
+// Make public files accessible
 app.use(express.static('public'));
 
+// Routing
 app.get('/', function (req, res) {
-    res.sendFile('index.html', { root: path.join(__dirname) });
+    
+    console.log("Serving file index.html");
+    //res.sendFile('index.html', { root: path.join(__dirname) });
+    res.send(swig.renderFile('index.html', {port:PORT}));
 });
 
 app.get('/favicon.ico', function(req, res) {
@@ -22,43 +28,45 @@ server.listen(PORT, function (err) {
     console.log('App server listening on port', PORT, '!');
 });
 
-app.use('/peer', PeerServer(server, {}));
-server.on('connection', function(){
+// PeerJS stuff
+peerServer = PeerServer(server, {});
+
+peerServer.on('connection', function(){
     console.log("server.on.connection");
 });
-server.on('disconnect', function(){
+
+peerServer.on('disconnect', function(){
     console.log("server.on.disconnect");
 });
-/*peerjs_server = PeerServer({
-    port: PEER_PORT,
-    path: '/peer'
-});*/
 
+app.use('/peer', peerServer);
 
-var randomProperty = function (object) {
+// Returns random property from object
+function randomProperty(object) {
   var keys = Object.keys(object);
   return object[keys[Math.floor(keys.length * Math.random())]];
 };
 
+// Object containing all currently connected ip->peerId mappings
 var all_peers = [];
 
 io.on('connection', function(socket) {
     var ip = socket.handshake.address;
     
-    console.log("IP:", ip, " connect to server");
+    console.log("Ip:", ip, "connect to server");
     
+    // Get random id and return to requester
     socket.on('nextStranger', function(requester) {
         console.log('Received nextStranger from ', ip);
-        if (all_peers.length > 1)
-        {
+        if (all_peers.length > 1) {
             do {
                 var random_id = randomProperty(all_peers);
-            } while (random_id == all_peers[ip]); // make sure you can't connect to yourself
-            
+            } while (random_id == all_peers[ip]); // make sure you can't connect to yourself            
             socket.emit('nextStranger', {id: random_id});            
         }
     });
 
+    // Register peerId with ip address 
     socket.on('registerId', function(user) {
         console.log("Received registerId from ", ip);
         if (typeof(user.id) === "string") {
@@ -70,16 +78,8 @@ io.on('connection', function(socket) {
         }
     });
     
+    // Remove ip address from mappings
     socket.on('disconnect', function(socket){
         delete all_peers[ip];
     });
 });
-
-
-/*peerjs_server.on('connection', function (id) {
-    console.log("ID: '", id, "' connected");
-});
-
-peerjs_server.on('disconnect', function (id) {
-    console.log("ID: '", id, "' disconnected");
-});*/
