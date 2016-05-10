@@ -10,9 +10,13 @@
         <script>
             window.addEventListener('load', function()
             {
-                var peer = new Peer('', {host: 'localhost', port: 443, path: '/peer'});                
+                var peer = new Peer('', {host: 'localhost', port: 80, path: '/peer'});                
                 
-                var socket = io('https://localhost/');
+                peer.on('open', function() {
+                    console.log("PeerJS connection success ID:", peer.id);
+                });
+                
+                var socket = io.connect('http://localhost/');
                 socket.on('connect', function(err){
                     console.log("socket.onconnect callback");
                     if (err) {
@@ -20,11 +24,18 @@
                     }
                     else {
                         console.log("Connected to socket.io");
-                        peer.on('connection', function() {
-                            // Register our id with the server
-                            console.log("Our peer id:", peer.id);
-                            socket.emit('registerId', {id: peer.id});    
-                        });                                            
+                        // Register our id with the server
+                        // or wait for id from server and then register
+                        if (peer.open) {
+                            socket.emit('registerId', {id: peer.id});        
+                        }
+                        else {
+                            peer.on('open', function() {
+                                console.log("Our peer id:", peer.id);
+                            });    
+                        }
+                        console.log(peer)
+                                                                    
                     }
                 })
                 

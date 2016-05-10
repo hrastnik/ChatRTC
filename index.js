@@ -5,8 +5,7 @@ var path = require('path');
 var PeerServer = require('peer').ExpressPeerServer;
 var io = require('socket.io')(server);
 
-var PORT = process.env.PORT || 9000; 
-var PEER_PORT = 9001;
+var PORT = process.env.PORT || 80; 
 
 app.use(express.static('public'));
 
@@ -23,7 +22,13 @@ server.listen(PORT, function (err) {
     console.log('App server listening on port', PORT, '!');
 });
 
-app.use('/peerjs', PeerServer(server, {}));
+app.use('/peer', PeerServer(server, {}));
+server.on('connection', function(){
+    console.log("server.on.connection");
+});
+server.on('disconnect', function(){
+    console.log("server.on.disconnect");
+});
 /*peerjs_server = PeerServer({
     port: PEER_PORT,
     path: '/peer'
