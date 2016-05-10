@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var path = require('path');
-var PeerServer = require('peer').PeerServer;
+var PeerServer = require('peer').ExpressPeerServer;
 var io = require('socket.io')(server);
 
 var PORT = process.env.PORT || 9000; 
@@ -23,10 +23,12 @@ server.listen(PORT, function (err) {
     console.log('App server listening on port', PORT, '!');
 });
 
-peerjs_server = PeerServer({
+app.use('/peerjs', PeerServer(server, {}));
+/*peerjs_server = PeerServer({
     port: PEER_PORT,
     path: '/peer'
-});
+});*/
+
 
 var randomProperty = function (object) {
   var keys = Object.keys(object);
