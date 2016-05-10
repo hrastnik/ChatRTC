@@ -12,7 +12,7 @@
             {
                 var peer = new Peer('', {host: 'localhost', port: 443, path: '/peer'});                
                 
-                var socket = io('http://localhost:9001/');
+                var socket = io('https://localhost/');
                 socket.on('connect', function(err){
                     console.log("socket.onconnect callback");
                     if (err) {
