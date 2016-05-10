@@ -5,7 +5,7 @@ var path = require('path');
 var PeerServer = require('peer').PeerServer;
 var io = require('socket.io')(server);
 
-var PORT = 9000; 
+var PORT = process.env.port || 9000; 
 var PEER_PORT = 9001;
 
 app.use(express.static('public'));
