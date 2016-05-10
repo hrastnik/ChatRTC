@@ -13,7 +13,6 @@ app.use(express.static('public'));
 
 // Routing
 app.get('/', function (req, res) {
-    
     console.log("Serving file index.html");
     //res.sendFile('index.html', { root: path.join(__dirname) });
     res.send(swig.renderFile('index.html', {port:PORT}));
@@ -29,14 +28,16 @@ server.listen(PORT, function (err) {
 });
 
 // PeerJS stuff
-peerServer = PeerServer(server, {});
-
-peerServer.on('connection', function(){
-    console.log("server.on.connection");
+peerServer = PeerServer(server, {
+    key: 'peerjs'
 });
 
-peerServer.on('disconnect', function(){
-    console.log("server.on.disconnect");
+peerServer.on('connection', function(id){
+    console.log("Peer with id", id, "connected");
+});
+
+peerServer.on('disconnect', function(id){
+    console.log("Peer with id", id, "disconnected");
 });
 
 app.use('/peer', peerServer);
@@ -53,7 +54,7 @@ var all_peers = [];
 io.on('connection', function(socket) {
     var ip = socket.handshake.address;
     
-    console.log("Ip:", ip, "connect to server");
+    console.log("socket.io on 'connection' -> ip =", ip);
     
     // Get random id and return to requester
     socket.on('nextStranger', function(requester) {

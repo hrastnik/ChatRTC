@@ -11,8 +11,10 @@
             window.addEventListener('load', function()
             {
                 var peer = new Peer('', {
-                    host: window.location.protocol+"//"+window.location.hostname, 
-                    port: {{port}}, 
+                    host: window.location.hostname,
+                    secure:true,
+                    key:'peerjs',
+                    port: 443, 
                     path: '/peer'
                 });                
                 
@@ -20,7 +22,7 @@
                     console.log("PeerJS connection success ID:", peer.id);
                 });
                 
-                var socket = io.connect(window.location.protocol+"//"+window.location.hostname+":{{port}}/");
+                var socket = io.connect(window.location.href);
                 socket.on('connect', function(err){
                     console.log("socket.onconnect callback");
                     if (err) {
