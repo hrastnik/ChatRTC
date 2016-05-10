@@ -13,6 +13,12 @@
                 var peer = new Peer('', {host: 'localhost', port: 9000, path: '/peer'});                
                 console.log(peer);
                 var socket = io('http://localhost:3000/');
+                
+                // Register our id with the server
+                console.log("Our peed id:", peer.id);
+                socket.emit('registerId', {id: peer.id});
+                
+                // 
                 socket.on('nextStranger', function(stranger) {
                     console.log("Received nextStranger")
                     if (window.localMediaStream) {
@@ -31,7 +37,7 @@
                 
                 document.getElementById('nextButton').onclick = function(){
                     console.log("Sent req")
-                    socket.emit('nextStranger', {id: peer.id});
+                    socket.emit('nextStranger');
                 }
             }
         </script>

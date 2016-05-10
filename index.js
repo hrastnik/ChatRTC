@@ -36,8 +36,7 @@ io.on('connection', function(socket) {
     console.log("IP:", ip, " connect to server");
     
     socket.on('nextStranger', function(requester) {
-        console.log('Received nextStranger');
-        console.log('Received id :', requester.id);
+        console.log('Received nextStranger from ', ip);
         if (all_peers.length > 1)
         {
             do {
@@ -49,8 +48,13 @@ io.on('connection', function(socket) {
     });
 
     socket.on('registerId', function(user) {
-        if (typeof(user) === "string") {
+        console.log("Received registerId from ", ip);
+        if (typeof(user.id) === "string") {
             all_peers[ip] = user.id;
+            console.log("ID '", user.id, "' successfully registered for ip ", ip);
+        }
+        else {
+            console.log("Error registering ID");
         }
     });
     
