@@ -10,7 +10,7 @@
         <script>
             window.addEventListener('load', function()
             {
-                var peer = new Peer('', {host: window.location.hostname, port: {{port}}, path: '/peer'});                
+                var peer = new Peer('', {host: 'chatrtc.herokuapp.com', port: {{port}}, path: '/peer'});                
                 
                 peer.on('open', function() {
                     console.log("PeerJS connection success ID:", peer.id);
