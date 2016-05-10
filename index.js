@@ -11,6 +11,9 @@ app.get('/', function (req, res) {
     res.sendFile('index.html', { root: path.join(__dirname) });
 });
 
+app.get('/favicon.ico', function(req, res) {
+})
+
 server.listen(3000, function () {
   console.log('App server listening on port 3000!');
 });

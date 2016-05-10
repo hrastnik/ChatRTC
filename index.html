@@ -8,15 +8,11 @@
         <script type="text/javascript" src="javascript/video.js"></script>
         <script type="text/javascript" src="javascript/socket.js"></script>
         <script>
-            document.body.onload = function()
+            document.body.addEventListener('load', function()
             {
                 var peer = new Peer('', {host: 'localhost', port: 9000, path: '/peer'});                
                 console.log(peer);
                 var socket = io('http://localhost:3000/');
-                socket.on('connect', function() {
-                    console.log("Sent id '", peer.id, "' to server");
-                    socket.emit('id', peer.id);
-                });
                 socket.on('nextStranger', function(stranger) {
                     console.log("Received nextStranger")
                     if (window.localMediaStream) {
