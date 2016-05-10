@@ -4,7 +4,8 @@
   "description": "A Chatroulette like site built with node.js and WebRTC",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "author": "Matt Hammond",
   "license": "ISC",
