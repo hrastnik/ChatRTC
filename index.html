@@ -10,7 +10,7 @@
         <script>
             window.addEventListener('load', function()
             {
-                var peer = new Peer('', {host: 'localhost', port: 9000, path: '/peer'});                
+                var peer = new Peer('', {host: 'localhost', port: 443, path: '/peer'});                
                 
                 var socket = io('http://localhost:9001/');
                 socket.on('connect', function(err){
