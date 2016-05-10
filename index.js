@@ -5,7 +5,8 @@ var path = require('path');
 var PeerServer = require('peer').PeerServer;
 var io = require('socket.io')(server);
 
-var PORT = process.env.PORT || 80; 
+var PORT = 9000; 
+var PEER_PORT = 9001;
 
 app.use(express.static('public'));
 
@@ -14,14 +15,16 @@ app.get('/', function (req, res) {
 });
 
 app.get('/favicon.ico', function(req, res) {
-})
+    res.sendStatus(404);
+});
 
-server.listen(PORT, function () {
-  console.log('App server listening on port', PORT, '!');
+server.listen(PORT, function (err) {
+    if (err) throw err;
+    console.log('App server listening on port', PORT, '!');
 });
 
 peerjs_server = PeerServer({
-    port: 9000,
+    port: PEER_PORT,
     path: '/peer'
 });
 

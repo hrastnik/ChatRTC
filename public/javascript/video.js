@@ -19,12 +19,10 @@
     
     if (initUserMedia()) 
     {
-        console.log("Successfuly detected getUserMedia()");
         navigator.getUserMedia({
             video: true,
             audio: true
         }, function successCallback(localMediaStream) {
-            console.log("Success getting user media");
             var video = document.getElementById('local_video');
             console.log(video);
             window.localMediaStream = localMediaStream; // Save this for later
@@ -34,6 +32,9 @@
             if (e) throw e;
         });
     }
+    else 
+    {
+        console.log("Failer getting user media... Unsuportted browser");    
+    }
   
-    console.log("video.js successfully included");
 })()

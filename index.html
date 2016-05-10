@@ -8,17 +8,31 @@
         <script type="text/javascript" src="javascript/video.js"></script>
         <script type="text/javascript" src="javascript/socket.js"></script>
         <script>
-            document.body.addEventListener('load', function()
+            window.addEventListener('load', function()
             {
                 var peer = new Peer('', {host: 'localhost', port: 9000, path: '/peer'});                
-                console.log(peer);
-                var socket = io('http://localhost:3000/');
                 
-                // Register our id with the server
-                console.log("Our peed id:", peer.id);
-                socket.emit('registerId', {id: peer.id});
+                var socket = io('http://localhost:9001/');
+                socket.on('connect', function(err){
+                    console.log("socket.onconnect callback");
+                    if (err) {
+                        console.log(err);
+                    }
+                    else {
+                        console.log("Connected to socket.io");
+                        peer.on('connection', function() {
+                            // Register our id with the server
+                            console.log("Our peer id:", peer.id);
+                            socket.emit('registerId', {id: peer.id});    
+                        });                                            
+                    }
+                })
                 
-                // 
+                var onCallConnected = function(stream) {
+                    var video = document.getElementById('remote_video');
+                    video.src = window.URL.createObjectURL(stream);
+                };
+                
                 socket.on('nextStranger', function(stranger) {
                     console.log("Received nextStranger")
                     if (window.localMediaStream) {
@@ -26,10 +40,7 @@
                         call.on('stream', onCallConnected);
                     }
                 });
-                function onCallConnected(stream) {
-                    var video = document.getElementById('remote_video');
-                    video.src = window.URL.createObjectURL(stream);
-                }
+                
                 peer.on('call', function(call) {
                     call.answer(window.localMediaStream);
                     call.on('stream', onCallConnected);
@@ -39,7 +50,7 @@
                     console.log("Sent req")
                     socket.emit('nextStranger');
                 }
-            }
+            });
         </script>
         <h1>Roulette</h1>
         
