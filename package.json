@@ -1,0 +1,16 @@
+{
+  "name": "roulette_site",
+  "version": "1.0.0",
+  "description": "A Chatroulette like site built with node.js and WebRTC",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matt Hammond",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.4",
+    "peer": "^0.2.8",
+    "socket.io": "^1.4.6"
+  }
+}

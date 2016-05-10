@@ -1,0 +1,70 @@
+<!DOCTYPE htlm>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />        
+    </head>    
+    <body>
+        <script type="text/javascript" src="javascript/peer.js"></script>
+        <script type="text/javascript" src="javascript/video.js"></script>
+        <script type="text/javascript" src="javascript/socket.js"></script>
+        <script>
+            document.body.onload = function()
+            {
+                var peer = new Peer('', {host: 'localhost', port: 9000, path: '/peer'});                
+                console.log(peer);
+                var socket = io('http://localhost:3000/');
+                socket.on('connect', function() {
+                    console.log("Sent id '", peer.id, "' to server");
+                    socket.emit('id', peer.id);
+                });
+                socket.on('nextStranger', function(stranger) {
+                    console.log("Received nextStranger")
+                    if (window.localMediaStream) {
+                        var call = peer.call(stranger.id, window.localMediaStream); 
+                        call.on('stream', onCallConnected);
+                    }
+                });
+                function onCallConnected(stream) {
+                    var video = document.getElementById('remote_video');
+                    video.src = window.URL.createObjectURL(stream);
+                }
+                peer.on('call', function(call) {
+                    call.answer(window.localMediaStream);
+                    call.on('stream', onCallConnected);
+                });
+                
+                document.getElementById('nextButton').onclick = function(){
+                    console.log("Sent req")
+                    socket.emit('nextStranger', {id: peer.id});
+                }
+            }
+        </script>
+        <h1>Roulette</h1>
+        
+        <div class="row">
+            <div class="col-md-6"> 
+                <h3>Local Video</h3>
+                <div class="container">
+                    <video id="local_video" autoplay></video>
+                    <h3>My ID: <span id="peer_id">/</span></h3>
+                </div>
+            </div>
+            
+            <div class="col-md-6"> 
+                <h3>Remote Video</h3>
+                <div>
+                    <video id="remote_video" autoplay></video>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <button class="btn-lg btn-primary center-block" onclick="toggleVideoPlayPause()">Stop</button>            
+            </div>
+            <div class="col-md-6">
+                <button class="btn-lg btn-primary center-block" id="nextButton">NEXT</button>
+            </div>    
+        </div>
+    </body>
+
+</html>
