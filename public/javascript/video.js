@@ -17,24 +17,27 @@
         else video.play();
     }
     
-    if (initUserMedia()) 
+    window.addEventListener('load', function()
     {
-        navigator.getUserMedia({
-            video: true,
-            audio: true
-        }, function successCallback(localMediaStream) {
-            var video = document.getElementById('local_video');
-            console.log(video);
-            window.localMediaStream = localMediaStream; // Save this for later
-            video.src = window.URL.createObjectURL(localMediaStream);
-        }, function errorCallback(e) {
-            console.log("Failed getting user media");
-            if (e) throw e;
-        });
-    }
-    else 
-    {
-        console.log("Failer getting user media... Unsuportted browser");    
-    }
+        if (initUserMedia()) 
+        {
+            navigator.getUserMedia({
+                video: true,
+                audio: true
+            }, function successCallback(localMediaStream) {
+                var video = document.getElementById('local_video');
+                console.log(video);
+                window.localMediaStream = localMediaStream; // Save this for later
+                video.src = window.URL.createObjectURL(localMediaStream);
+            }, function errorCallback(e) {
+                console.log("Failed getting user media");
+                if (e) throw e;
+            });
+        }
+        else 
+        {
+            console.log("Failer getting user media... Unsuportted browser");    
+        }        
+    });
   
 })()
