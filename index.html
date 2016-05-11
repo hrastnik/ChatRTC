@@ -5,8 +5,8 @@
     </head>    
     <body>
         <script type="text/javascript" src="javascript/peer.js"></script>
-        <script type="text/javascript" src="javascript/video.js"></script>
         <script type="text/javascript" src="javascript/socket.js"></script>
+        <script type="text/javascript" src="javascript/video.js"></script>
         <script>
             window.addEventListener('load', function()
             {
@@ -19,12 +19,11 @@
                 });                
                 
                 peer.on('open', function() {
-                    console.log("PeerJS connection success ID:", peer.id);
+                    console.log("Connected to Peer.js");
                 });
                 
                 var socket = io.connect(window.location.href);
                 socket.on('connect', function(err){
-                    console.log("socket.onconnect callback");
                     if (err) {
                         console.log(err);
                     }
@@ -37,13 +36,11 @@
                         }
                         else {
                             peer.on('open', function() {
-                                console.log("Our peer id:", peer.id);
+                                socket.emit('registerId', {id: peer.id});        
                             });    
-                        }
-                        console.log(peer)
-                                                                    
+                        }                                               
                     }
-                })
+                });
                 
                 var onCallConnected = function(stream) {
                     var video = document.getElementById('remote_video');
@@ -51,7 +48,6 @@
                 };
                 
                 socket.on('nextStranger', function(stranger) {
-                    console.log("Received nextStranger")
                     if (window.localMediaStream) {
                         var call = peer.call(stranger.id, window.localMediaStream); 
                         call.on('stream', onCallConnected);
@@ -64,7 +60,6 @@
                 });
                 
                 document.getElementById('nextButton').onclick = function(){
-                    console.log("Sent req")
                     socket.emit('nextStranger');
                 }
             });
