@@ -74,8 +74,8 @@
                 console.log("Received nextStranger");
                 console.log(stranger);
                 if (window.localMediaStream) {
-                    var call = peer.call(stranger.id, window.localMediaStream); 
-                    call.on('stream', onCallConnected);
+                    var call = peer.call(stranger.id, window.localMediaStream).on('stream', onCallConnected); 
+                    //call.on('stream', onCallConnected);
                 }
             });
             
