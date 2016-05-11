@@ -72,7 +72,7 @@
             
             socket.on('nextStranger', function(stranger) {
                 console.log("Received nextStranger");
-                confirm.log(stranger);
+                console.log(stranger);
                 if (window.localMediaStream) {
                     var call = peer.call(stranger.id, window.localMediaStream); 
                     call.on('stream', onCallConnected);
