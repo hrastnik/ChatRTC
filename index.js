@@ -44,8 +44,8 @@ app.use('/peer', peerServer);
 
 // Returns random property from object
 function randomProperty(object) {
-  var keys = Object.keys(object);
-  return object[keys[Math.floor(keys.length * Math.random())]];
+var keys = Object.keys(object);
+return object[keys[Math.floor(keys.length * Math.random())]];
 };
 
 // Object containing all currently connected ip->peerId mappings
@@ -62,7 +62,8 @@ io.on('connection', function(socket) {
         if (all_peers.length > 1) {
             do {
                 var random_id = randomProperty(all_peers);
-            } while (random_id == all_peers[ip]); // make sure you can't connect to yourself            
+            } while (random_id == all_peers[ip]); // make sure you can't connect to yourself 
+            console.log("Responding with nextStranger: id", random_id);           
             socket.emit('nextStranger', {id: random_id});            
         }
     });
