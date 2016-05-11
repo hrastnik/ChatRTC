@@ -59,9 +59,13 @@ io.on('connection', function(socket) {
     // Get random id and return to requester
     socket.on('nextStranger', function(requester) {
         console.log('Received nextStranger from ', ip);
+        console.log("Number of mappings:", Object.keys(all_peers).length);
         if (Object.keys(all_peers).length > 1) {
+            var n_tries = 10;
             do {
                 var random_id = randomProperty(all_peers);
+                n_tries--;
+                if (n_tries == 0) return;
             } while (random_id == all_peers[ip]); // make sure you can't connect to yourself 
             console.log("Responding with nextStranger: id", random_id);           
             socket.emit('nextStranger', {id: random_id});            
