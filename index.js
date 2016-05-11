@@ -59,7 +59,7 @@ io.on('connection', function(socket) {
     // Get random id and return to requester
     socket.on('nextStranger', function(requester) {
         console.log('Received nextStranger from ', ip);
-        if (all_peers.length > 1) {
+        if (Object.keys(all_peers).length > 1) {
             do {
                 var random_id = randomProperty(all_peers);
             } while (random_id == all_peers[ip]); // make sure you can't connect to yourself 
